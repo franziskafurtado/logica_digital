@@ -1,0 +1,53 @@
+ATIVIDADE PRATICA - COMPARADORES EM SYSTEMVERILOG
+================================================
+
+ORGANIZACAO DA ENTREGA
+
+Parte_1_sistema_x/
+  tb.sv                    Testbench da Parte 1 (modulo tb)
+  sistema_x.sv             Comparador de X[3:0] com a constante 4'b1001
+  sistema_x_simulacao.png  Captura final do SimVision
+  celulas/                 Modelos funcionais das portas usadas na simulacao
+    AND4X1HVT.v
+    CLKINVX1HVT.v
+
+Parte_2_sistema_y/
+  tb.sv                    Testbench da Parte 2 (modulo tb)
+  sistema_y.sv             Comparador de X[3:0] com REF[3:0]
+  sistema_y_simulacao.png  Captura final do SimVision
+  celulas/
+    AND4X1HVT.v
+    XNOR2X1LVT.v
+
+ARQUIVOS PEDIDOS NO ENUNCIADO
+
+Parte 1: tb.sv, sistema_x.sv e imagem da simulacao.
+Parte 2: tb.sv, sistema_y.sv e imagem da simulacao.
+
+Os arquivos em celulas/ sao auxiliares para compilar as instancias
+hierarquicas. Sao modelos funcionais simplificados, montados para a
+simulacao local. Se o professor exigir os modelos originais da biblioteca
+tecnologica, use os arquivos oficiais fornecidos para a disciplina.
+
+COMANDOS PARA REPRODUZIR NO XCELIUM
+
+Parte 1 (execute dentro de Parte_1_sistema_x):
+  xrun -64bit -sv -access +rwc -gui -top tb \
+    celulas/AND4X1HVT.v \
+    celulas/CLKINVX1HVT.v \
+    sistema_x.sv tb.sv
+
+Parte 2 (execute dentro de Parte_2_sistema_y):
+  xrun -64bit -sv -access +rwc -gui -top tb \
+    celulas/AND4X1HVT.v \
+    celulas/XNOR2X1LVT.v \
+    sistema_y.sv tb.sv
+
+RESULTADOS OBTIDOS NA SIMULACAO DO USUARIO
+
+Parte 1: Testes aprovados: 16/16 (160 ns)
+Parte 2: Testes aprovados: 256/256 (2560 ns)
+
+OBSERVACAO
+Ambas as partes possuem um modulo chamado tb, como exigido no enunciado.
+Por isso, compile cada pasta separadamente.
