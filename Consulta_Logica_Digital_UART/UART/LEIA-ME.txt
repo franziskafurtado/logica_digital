@@ -1,0 +1,61 @@
+EXERCICIO SUGERIDO 3 — UART 8E1
+================================
+
+Formato: [START=0] [D0 D1 D2 D3 D4 D5 D6 D7] [PARIDADE PAR] [STOP=1]
+Total: 11 bits por quadro. D0 e transmitido primeiro (LSB-first).
+
+ARQUIVOS
+--------
+decodificador_UART.sv      Receptor solicitado no enunciado.
+codificador_UART.sv        Transmissor de referencia (nao e o do Moodle).
+decodificador_UART_tb.sv   Testbench independente com quadros validos e erros.
+uart_loopback_tb.sv        Testbench transmitindo do TX para o RX.
+
+PORTAS DO RECEPTOR
+-----------------
+clk       clock do sistema
+reset     reset assincrono ativo em 1
+rx        entrada serial, ociosa em 1
+dados     byte recebido na saida paralela (mesmo se paridade invalida)
+paridade  1 se a paridade do ultimo quadro estava correta
+dv        1 ciclo de clock se paridade E stop estao corretos
+
+PASSO A PASSO DA FSM
+-------------------
+ESPERA -> INICIO -> RECEBE_DADOS -> VERIFICA_PARIDADE -> VERIFICA_PARADA
+         ^                                                    |
+         |                                                    v
+         +----------------- volta a ESPERA --------------------+
+
+- Em ESPERA, procura rx=0.
+- Em INICIO, valida o start no meio do bit para rejeitar ruido breve.
+- Em RECEBE_DADOS, amostra D0 ate D7 no centro de cada bit.
+- Em VERIFICA_PARIDADE, confere se bit_paridade == (^dados_temp).
+- Em VERIFICA_PARADA, confere stop=1. Gera dv apenas se stop e paridade certos.
+
+SIMULACAO COM ICARUS VERILOG (se estiver instalado)
+--------------------------------------------------
+iverilog -g2012 -s decodificador_UART_tb -o uart_rx.vvp \
+  decodificador_UART.sv decodificador_UART_tb.sv
+vvp uart_rx.vvp
+
+iverilog -g2012 -s uart_loopback_tb -o uart_loopback.vvp \
+  codificador_UART.sv decodificador_UART.sv uart_loopback_tb.sv
+vvp uart_loopback.vvp
+
+CONFIGURACAO DO CLOCK
+---------------------
+CLKS_POR_BIT = frequencia_de_clk / baud_rate (inteiro, preferencialmente >= 8).
+Exemplo: 16 MHz / 1 MHz = 16 clocks por bit.
+
+OBSERVACOES
+-----------
+- Enunciado menciona o codificador ja trabalhado no Moodle; nao temos
+  esse arquivo. O transmissor incluso e uma implementacao independente
+  de referencia com o mesmo formato 8E1.
+- Opcao de projeto: dv sinaliza apenas quadros totalmente validos,
+  inclusive paridade e stop. Se a disciplina definir dv de outro modo,
+  basta ajustar a condicao final de VERIFICA_PARADA.
+- Nao ha oversampling nem recuperacao dinamica de baud; o receptor
+  assume baud nominal ajustado pelo parametro CLKS_POR_BIT.
+- O clock e o baud rate nao foram especificados pelo enunciado.
