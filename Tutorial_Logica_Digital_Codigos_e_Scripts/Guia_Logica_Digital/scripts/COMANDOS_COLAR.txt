@@ -1,0 +1,27 @@
+GUIA RAPIDO - GENUS, XCELIUM, SDF (personalize os arquivos)
+
+# Sintese a partir de script TCL:
+genus -no_gui -files scripts/testar_rapido_genus.tcl
+
+# Rodar RTL + TB com Xcelium, em comando unico:
+xrun -64bit -sv -access +rwc -gui \
+  modelos/controlador_temporizado.sv \
+  modelos/tb_controlador_temporizado.sv \
+  -top tb_controlador_temporizado
+
+# Rodar netlist + biblioteca .v + TB:
+xrun -64bit -sv -access +rwc -gui \
+  fast_vdd1v0_basicCells_hvt.v \
+  controlador_temporizado_mapped.v \
+  modelos/tb_controlador_temporizado.sv \
+  -top tb_controlador_temporizado
+
+# Trecho de testbench para anotacao de atrasos:
+initial begin
+  $sdf_annotate("atrasos_controlador.sdf", dut, , "sdf_annotation.log", "MAXIMUM");
+end
+
+# IMPORTANTE:
+# Ajuste os nomes de instancia e de top; tb e DUT nao sao a mesma coisa.
+# Nao inclua testbench no Genus.
+# Arquivo .lib para Genus; arquivo .v da biblioteca para simular netlist.
