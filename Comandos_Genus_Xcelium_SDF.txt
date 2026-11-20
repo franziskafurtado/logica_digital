@@ -1,0 +1,82 @@
+CONSULTA - GENUS, XCELIUM E SDF
+
+1. Genus (terminal)
+genus -no_gui -files script_genus.tcl
+
+script_genus.tcl
+read_libs fast_vdd1v0_basicCells_hvt.lib
+read_hdl -sv nome_arquivo_do_design.sv
+elaborate
+report gates
+syn_generic
+syn_map
+gui_show
+report_timing -unconstrained
+report gates
+report_sequential
+write_netlist > detecta_padrao_serial_mapped.sv
+write_sdf > atrasos_meu_design.sdf
+
+2. Testbench - anotacao de atrasos
+initial begin
+    $sdf_annotate("atrasos_meu_design.sdf", tb.instX, ,
+                  "sdf_annotation.log", "MAXIMUM");
+end
+
+3. Preparar biblioteca GPDK045
+LIB_BASE=/tools/gpdk/gsclib045_all_v4.4/lan/flow/t1u1/reference_libs/GPDK045
+LIB_V=$LIB_BASE/gsclib045_all_v4.4/gsclib045_hvt/verilog
+ln -s "$LIB_V/fast_vdd1v0_basicCells_hvt.v"
+xrun -compile fast_vdd1v0_basicCells_hvt.v
+
+4. Xcelium - sistema Y (um passo)
+xrun -64bit -sv -access +rwc -gui \
+    fast_vdd1v0_basicCells_hvt.v \
+    sistema_y.sv \
+    tb2.sv \
+    -top tby
+
+5. Xcelium - sistema X (um passo)
+xrun -64bit -sv -access +rwc -gui \
+    fast_vdd1v0_basicCells_hvt.v \
+    sistema_x.sv \
+    tb1.sv \
+    -top tb1
+
+6. Xcelium - AND4 (um passo; corrigida quebra de linhas)
+xrun -64bit -sv -access +rwc -gui \
+    AND4X1HVT.v \
+    tb.sv \
+    -top tb
+
+7. Xcelium - compilacao, elaboracao e execucao separadas
+xrun -64bit -sv -access +rwc -compile \
+    fast_vdd1v0_basicCells_hvt.v \
+    detecta_padrao_serial_mapped.sv \
+    tb.sv
+xrun -64bit -sv -access +rwc -elaborate -top tb
+xrun -R -gui
+
+8. Simulacao de netlist mapeada com SDF
+xrun -64bit -sv -access +rwc -gui \
+    fast_vdd1v0_basicCells_hvt.v \
+    detecta_padrao_serial_mapped.sv \
+    tb.sv \
+    -top tb
+
+GUI SimVision: comando run no console de simulacao.
+
+9. Diagnostico rapido
+pwd
+ls -l
+ls -l fast_vdd1v0_basicCells_hvt.v
+xrun -help
+
+Troubleshooting:
+- Module unresolved: incluir modelo da celula que falta; conferir HVT/LVT.
+- Top not found: -top deve ser o modulo do testbench, sem .sv.
+- Link inexistente: conferir o caminho GPDK045 e o diretorio atual.
+- Codigo alterado e nao atualiza: recompilar e reelaborar; usar xrun -clean se apropriado.
+- Sem ondas: -access +rwc, adicionar sinais, executar run na GUI.
+- SDF nao anota: conferir caminhos, instancia do DUT e sdf_annotation.log.
+- Esquematico: gui_show depende de recursos graficos do ambiente.
