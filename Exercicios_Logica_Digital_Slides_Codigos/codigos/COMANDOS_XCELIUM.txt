@@ -1,0 +1,27 @@
+# CARREGAR XCELIUM (se laboratorio utilizar Environment Modules)
+module add cdn/xcelium/xcelium2209
+
+# EXEMPLO: RTL + testbench; o -top e sempre o modulo TB, nao o DUT.
+xrun -64bit -sv -access +rwc -gui \
+  meu_primeiro_mux8x1.sv tb_mux8x1.sv -top tb_mux8x1
+
+xrun -64bit -sv -access +rwc -gui \
+  codificador_onehot.sv tb_codificador_onehot.sv -top tb_codificador_onehot
+
+xrun -64bit -sv -access +rwc -gui \
+  ula_soma_sub.sv tb_ula_soma_sub.sv -top tb_ula_soma_sub
+
+xrun -64bit -sv -access +rwc -gui \
+  codificador_paridade_par.sv tb_codificador_paridade_par.sv \
+  -top tb_codificador_paridade_par
+
+xrun -64bit -sv -access +rwc -gui \
+  codificador_verificador_paridade.sv \
+  tb_codificador_verificador_paridade.sv \
+  -top tb_codificador_verificador_paridade
+
+# NETLIST MAPEADA: tambem compilar arquivo Verilog da biblioteca .v.
+# Exemplo generico (os arquivos precisam existir):
+# xrun -64bit -sv -access +rwc -gui \
+#   fast_vdd1v0_basicCells_hvt.v ula_soma_sub_mapped.v \
+#   tb_ula_soma_sub.sv -top tb_ula_soma_sub

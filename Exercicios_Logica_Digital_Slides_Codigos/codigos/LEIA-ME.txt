@@ -1,0 +1,24 @@
+ATIVIDADES DE CONSULTA - EXERCICIOS DOS SLIDES DE LOGICA DIGITAL
+
+Arquivos .sv: SystemVerilog sintetizavel + respectivos testbenches.
+* MUX 8:1 hierarquico, one-hot 2->4, ULA signed 3->4, paridade par,
+  codificador/verificador paridade par.
+* Para RTL: compile o modulo e TB. Testbenches NAO devem entrar na sintese.
+* Genus: ajuste LIB, RTL e TOP em script_genus_exemplo.tcl.
+* Xcelium: comandos no arquivo COMANDOS_XCELIUM.txt.
+
+ATENCOES AOS SLIDES:
+1. MUX 8:1 exige 3 bits de seletor, mas slide fornece A[3:0].
+   Nesta solucao os enderecos 8..15 geram Q=0; X[A[2:0]] para 0..7.
+2. MUX solicitado com celulas da biblioteca: o arquivo fornecido usa
+   primitivas logicas Verilog em hierarquia, para funcionar sem depender
+   de pinos fisicos especificos. Para ATENDER literalmente a exigencia
+   de celulas da biblioteca, trocar instancias 'and/or/not' por celulas
+   GPDK045 com pinagem verificada no fast_vdd1v0_basicCells_hvt.v.
+3. ULA: no SystemVerilog vetores logic [N:0] sao SEM SINAL por padrao.
+   Por isso os operandos foram declarados logic signed [2:0].
+4. Paridade: ^A significa XOR de reducao, diferente de A ^ B.
+5. E = ENV && ((^A) ^ P); nao depende de ENP, de acordo com o slide.
+
+Limitacao: nenhum simulador de Verilog esta instalado neste ambiente.
+Os arquivos nao foram executados no Xcelium nem sintetizados no Genus.
