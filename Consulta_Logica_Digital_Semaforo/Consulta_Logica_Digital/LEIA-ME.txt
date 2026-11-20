@@ -1,0 +1,25 @@
+EXERCICIO SUGERIDO 2 - SEMAFORO COMPLETO
+
+Arquivos:
+- semaforo_completo.sv: FSM Moore sintetizavel com contador compartilhado.
+- semaforo_completo_tb.sv: testbench acelerado que verifica os ciclos com e sem pedido.
+
+Hipoteses adicionadas ao enunciado:
+1. A segunda frase "Rua 1 VERDE por 30s" refere-se a Rua 2.
+2. Amarelo dura 3 s em cada rua (parametro T_AMARELO).
+3. Pedido de pedestre fica memorizado e e atendido ao fim da fase Rua 2.
+4. A fase INICIO tem todos os sinais vermelhos e sai dela na proxima borda.
+
+Sequencia: INICIO -> R1_VERDE (20s) -> R1_AMARELO (3s)
+-> R2_VERDE (30s) -> R2_AMARELO (3s)
+-> [PED_VERDE (15s), se houver pedido] -> R1_VERDE.
+
+Reset: assincrono, ativo em nivel alto.
+Clock real: 1 Hz. No testbench, duracoes menores e clock acelerado.
+
+Com Icarus Verilog instalado:
+iverilog -g2012 -s semaforo_completo_tb -o semaforo_tb.vvp semaforo_completo.sv semaforo_completo_tb.sv
+vvp semaforo_tb.vvp
+
+Com Vivado, adicione o modulo como Design Source, e o arquivo _tb.sv
+como Simulation Source, selecione semaforo_completo_tb e rode Behavioral Simulation.
