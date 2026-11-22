@@ -1,0 +1,29 @@
+AVALIACAO PARCIAL 1 - PARTE 1 (2024) | QUESTAO 1
+Respostas-modelo para estudo (nao sao transcricao do enunciado).
+
+1.1 - Efeitos que limitam atrasos e tempos de transicao em portas CMOS
+
+Uma porta CMOS nao muda a saida instantaneamente porque sua capacitancia de
+carga (capacitancias de porta dos estagios seguintes, difusao do transistor,
+interconexoes e outras capacitancias parasitas) precisa ser carregada ou
+descarregada atraves da resistencia/conducao finita das redes PMOS e NMOS.
+Por isso, o atraso de propagacao cresce aproximadamente com o produto R*C
+e depende da topologia da porta, da quantidade de transistores em serie,
+do fan-out e do comprimento das interconexoes. As diferencas de mobilidade
+entre eletrons e lacunas tornam as subidas e descidas assimetricas. As
+caracteristicas dimensionais (W, L), a tensao de alimentacao, a temperatura
+e as variacoes do processo tambem alteram a corrente disponivel e, portanto,
+os tempos de propagacao e de transicao.
+
+1.2 - Como reduzir essas limitacoes
+
+Pode-se dimensionar adequadamente os transistores (aumentar a largura W
+quando necessario e equilibrar a forca das redes pull-up e pull-down),
+reduzir o fan-out, inserir buffers e usar cadeias de estagios com tamanhos
+progressivos para cargas grandes, simplificar o empilhamento de transistores,
+reduzir comprimento e capacitancia das interconexoes, melhorar o posicionamento
+das celulas e escolher topologias/celulas com menor atraso. Essas medidas
+envolvem compromissos: transistores maiores reduzem resistencia mas aumentam
+capacitancia de entrada e consumo; buffers adicionais aumentam area e potencia.
+Aumentar VDD pode acelerar a comutacao, mas eleva consumo e estresse e deve
+respeitar os limites da tecnologia.
