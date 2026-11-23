@@ -1,0 +1,16 @@
+# Execucao direta (ajuste o modulo de ambiente se necessario)
+module add cdn/xcelium/xcelium2209
+
+# Simular RTL (design + tb) em uma unica chamada:
+xrun -64bit -sv -access +rwc -top tb_dec_i2c dec_i2c.sv tb_dec_i2c.sv
+
+# Alternativa GUI:
+xrun -64bit -sv -access +rwc -gui -top tb_dec_i2c dec_i2c.sv tb_dec_i2c.sv
+
+# Verificar apenas compilacao / elaboracao:
+xrun -64bit -sv -elaborate -top tb_dec_i2c dec_i2c.sv tb_dec_i2c.sv
+
+# Sintese (depois de editar script_genus_dec_i2c.tcl para o caminho da .lib):
+genus -no_gui -files script_genus_dec_i2c.tcl
+
+# ATENCAO: nao execute o testbench como top do Genus. Top de sintese = dec_i2c.
