@@ -1,0 +1,22 @@
+Encoder rotativo - exercicio sugerido 4
+
+Arquivos:
+encoder_rotativo.sv: design sintetizavel (FSM e contador de passos liquidos).
+tb_encoder_rotativo.sv: testbench opcional de simulacao (nao sintetizavel).
+
+Sequencia de a,b:
+A: 00 -> 10 -> 11 -> 01 -> 00 => passo_a = 1 por um clock.
+B: 00 -> 01 -> 11 -> 10 -> 00 => passo_b = 1 por um clock.
+
+A cada 16 passos liquidos em um sentido: volta_a ou volta_b = 1 por um clock, saldo zerado.
+Alternancia de sentidos soma/subtrai no mesmo saldo; nenhuma contagem em transicoes invalidas.
+
+Comandos (se houver Icarus instalado):
+iverilog -g2012 -s tb_encoder_rotativo -o tb_encoder.vvp encoder_rotativo.sv tb_encoder_rotativo.sv
+vvp tb_encoder.vvp
+
+Comando para Xcelium:
+xrun -sv -top tb_encoder_rotativo encoder_rotativo.sv tb_encoder_rotativo.sv
+
+Observacao: sinais a e b sao considerados amostraveis no clock; em circuito fisico,
+sincronizadores e filtragem podem ser necessarios.
